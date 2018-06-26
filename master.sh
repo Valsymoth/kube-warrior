@@ -4,7 +4,7 @@ cat << EOF
   "name": "k8-master",
   "region": "fra1",
   "size": "s-1vcpu-1gb",
-  "image": "ubuntu-16-04-x64",
+  "image": "centos-7-x64",
   "ssh_keys":["$(cat ./secrets/fingerprint)"],
   "backups": false,
   "ipv6": true,

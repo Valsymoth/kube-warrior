@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" -d "$(. ./master.sh)" "https://api.digitalocean.com/v2/droplets" 
-=======
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" -d "$(cat ./nodes/master.json)" "https://api.digitalocean.com/v2/droplets"
->>>>>>> ee07cf81bea4ca7701e8e11c22c474e9335efca9

@@ -1,7 +1,7 @@
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" -d "$(. ./master.sh)" "https://api.digitalocean.com/v2/droplets" > api_outputs/init_master.log
 droplet_id=$(cat api_outputs/init_master.log | jq ".droplet.id")
 echo $droplet_id
-echo -e " I am spinning up a master node. This may take some time. Sleeping for 30 seconds then moving on.\n"
+echo -e " I am spinning up a master node. This may take some time. Sleeping for 2 minutes then moving on.\n"
 sleep 2m;
 echo -e "Nap time over. Moving on...."
 curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" "https://api.digitalocean.com/v2/droplets/$droplet_id" >> api_outputs/init_master.log 

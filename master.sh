@@ -1,15 +1,19 @@
+#!/bin/bash
+cat << EOF
 {
-  "name": "example.com",
-  "region": "nyc3",
+  "name": "k8-master",
+  "region": "fra1",
   "size": "s-1vcpu-1gb",
   "image": "ubuntu-16-04-x64",
-  "ssh_keys":["2d:57:fb:b2:44:60:c5:66:7c:8c:42:89:3f:a9:61:45"],
+  "ssh_keys":["$(cat ./secrets/fingerprint)"],
   "backups": false,
   "ipv6": true,
   "user_data": null,
   "private_networking": null,
   "volumes": null,
   "tags": [
-    "web"
+    "kubernetes"
   ]
 }
+EOF
+

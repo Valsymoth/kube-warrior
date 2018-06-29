@@ -1,3 +1,6 @@
+yum install wget
+wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o jq
+mv jq /usr/bin
 setenforce 0 
 sed -i 's/SELINUX=.*/SELINUX=permissive/' /etc/selinux/config 
 yum install docker -y 
@@ -25,3 +28,4 @@ EOF
 sysctl --system 
 #TO-DO fetch join token from the master and include in this file
 #kubeadm token create --print-join-command
+kubeadm join 159.89.20.210:6443 --token b87soc.xqngg22ppr1xrfj2 --discovery-token-ca-cert-hash sha256:f381eda5aa4d49b48cef23b19c16f0587409d407c5fdccfe4d2215d296a86574

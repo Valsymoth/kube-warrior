@@ -1,13 +1,33 @@
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" -d "$(. ./master.sh)" "https://api.digitalocean.com/v2/droplets" > api_outputs/init_master.log
-droplet_id=$(cat api_outputs/init_master.log | jq ".droplet.id")
-echo $droplet_id
+master_droplet_id=$(cat api_outputs/init_master.log | jq ".droplet.id")
+echo $master_droplet_id
 echo -e " I am spinning up a master node. This may take some time. Sleeping for 2 minutes then moving on.\n"
 sleep 2m;
 echo -e "Nap time over. Moving on...."
-curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" "https://api.digitalocean.com/v2/droplets/$droplet_id" >> api_outputs/init_master.log 
-droplet_ip4=$(cat api_outputs/init_master.log | jq ".droplet.networks.v4"  | cut -d { -f1 | grep ip_address | cut -d : -f2- | cut -d \" -f2) # don't know why JQ complains 
-echo $droplet_ip4
-scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./k8-master.sh root@$droplet_ip4:~ 
-ssh root@$droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ". ./k8-master.sh"
+curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" "https://api.digitalocean.com/v2/droplets/$master_droplet_id" >> api_outputs/init_master.log 
+master_droplet_ip4=$(cat api_outputs/init_master.log | jq ".droplet.networks.v4"  | cut -d { -f1 | grep ip_address | cut -d : -f2- | cut -d \" -f2) # don't know why JQ complains 
+echo master_droplet_ip4
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./k8-master.sh root@$master_droplet_ip4:~ 
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ~/.ssh/id_rsa root@$master_droplet_ip4:~/.ssh/id_rsa
+ssh root@$master_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ". ./k8-master.sh"
+ssh root@$master_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "mkdir -p /home/kubewarrior/.ssh/; cp /root/.ssh/authorized_keys /home/kubewarrior/.ssh/authorized_keys; chown kubewarrior:kubewarrior /home/kubewarrior/.ssh/authorized_keys"
+ssh kubewarrior@$master_droplet_ip4 -o StrictHostKeyChecking=no "kubeadm token create --print-join-command" >> k8-worker.sh
+
+
+## init worker stuff
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" -d "$(. ./worker.sh)" "https://api.digitalocean.com/v2/droplets" > api_outputs/init_worker.log
+worker_droplet_id=$(cat api_outputs/init_worker.log | jq ".droplet.id")
+echo $worker_droplet_id
+echo -e " I am spinning up a worker node. This may take some time. Sleeping for 2 minutes then moving on.\n"
+sleep 2m;
+echo -e "Nap time over. Moving on...."
+curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $(cat ./secrets/token)" "https://api.digitalocean.com/v2/droplets/$worker_droplet_id" >> api_outputs/init_worker.log
+worker_droplet_ip4=$(cat api_outputs/init_master.log | jq ".droplet.networks.v4"  | cut -d { -f1 | grep ip_address | cut -d : -f2- | cut -d \" -f2) # don't know why JQ complains
+echo worker_droplet_ip4
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./k8-worker.sh root@$worker_droplet_ip4:~
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ~/.ssh/id_rsa root@$worker_droplet_ip4:~/.ssh/id_rsa
+ssh root@$worker_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ". ./k8-worker.sh"
+ssh root@$worker_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  "mkdir -p /home/kubewarrior/.ssh/; cp /root/.ssh/authorized_keys /home/kubewarrior/.ssh/authorized_keys; chown kubewarrior:kubewarrior /home/kubewarrior/.ssh/authorized_keys"
 
 

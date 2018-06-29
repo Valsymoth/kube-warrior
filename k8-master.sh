@@ -34,9 +34,10 @@ sed -i 's/%wheel.*/%wheel        ALL=(ALL)       NOPASSWD: ALL/' /etc/sudoers
 chmod 440 /etc/sudoers 
 useradd -G wheel kubewarrior 
 echo kubewarrior:kubewarrior | chpasswd
+su kubewarrior -
 user=kubewarrior 
 mkdir -p /home/$user/.kube 
-cp -i /etc/kubernetes/admin.conf /home/$user/.kube/config
-chown $user:$user /home/$user/.kube/config
-sudo -u $user kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml 
-sudo -u $user kubectl get nodes 
+sudo cp -i /etc/kubernetes/admin.conf /home/$user/.kube/config
+sudo chown -R $user:$user /home/$user/.kube
+sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml 
+sudo kubectl get nodes 

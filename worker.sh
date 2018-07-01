@@ -3,7 +3,7 @@ cat << EOF
 {
   "name": "k8-worker",
   "region": "fra1",
-  "size": "s-1vcpu-1gb",
+  "size": "s-2vcpu-4gb",
   "image": "centos-7-x64",
   "ssh_keys":["$(cat ./secrets/fingerprint)"],
   "backups": false,

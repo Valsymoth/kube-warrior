@@ -11,8 +11,8 @@ scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./k8-master.sh r
 scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./kube-flannel.yml root@$master_droplet_ip4:~
 scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ~/.ssh/id_rsa root@$master_droplet_ip4:~/.ssh/id_rsa
 ssh root@$master_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ". ./k8-master.sh"
-ssh root@46.101.118.105 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-"mkdir -p /home/kubewarrior/.kube;cp -i /etc/kubernetes/admin.conf /home/kubewarrior/.kube/config;chown kubewarrior:kubewarrior /home/kubewarrior/.kube/config"
+ssh root@$master_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "mkdir -p /home/kubewarrior/.kube;cp -i /etc/kubernetes/admin.conf /home/kubewarrior/.kube/config;chown -R kubewarrior:kubewarrior /home/kubewarrior/.kube/"
+ssh root@$master_droplet_ip4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "mkdir -p /home/kubewarrior/.ssh/; cp /root/.ssh/authorized_keys /home/kubewarrior/.ssh/authorized_keys; chown -R kubewarrior:kubewarrior /home/kubewarrior/.ssh"
 ssh kubewarrior@$master_droplet_ip4 -o StrictHostKeyChecking=no "kubeadm token create --print-join-command" >> k8-worker.sh
 
 

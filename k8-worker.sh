@@ -1,4 +1,4 @@
-yum install wget
+yum install wget -y
 wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o jq
 mv jq /usr/bin
 setenforce 0 
@@ -21,10 +21,5 @@ systemctl start kubelet
 cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
-EOF cat <<EOF >  /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
 EOF
-sysctl --system 
-#TO-DO fetch join token from the master and include in this file
-#kubeadm token create --print-join-command
+sysctl --system

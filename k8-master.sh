@@ -32,9 +32,3 @@ chmod 640 /etc/sudoers
 echo "kubewarrior ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 sed -i 's/%wheel.*/%wheel        ALL=(ALL)       NOPASSWD: ALL/' /etc/sudoers
 chmod 440 /etc/sudoers
-#sudo su kubewarrior -
-#mkdir -p $HOME/.kube
-#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#sudo chown  $(id -u):$(id -g) $HOME/.kube/config
-#sudo kubectl apply -f kube-flannel.yml
-#sudo kubectl get nodes
